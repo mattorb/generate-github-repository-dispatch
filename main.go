@@ -13,6 +13,8 @@ import (
 	"strconv"
 )
 
+var token string
+
 func postGithubRepositoryDispatch(org string, repo string, token string) {
 	client := &http.Client{}
 	jsonData := map[string]string{"event_type": "checklinks"}
@@ -39,14 +41,20 @@ func generateRepositoryDispatch(w http.ResponseWriter, req *http.Request) {
 	}
 	fmt.Println(string(requestDump))
 
-	usr, _ := user.Current()
-	dir := usr.HomeDir
-	tokenPath := filepath.Join(dir, ".ghtoken")
-
-	postGithubRepositoryDispatch("mattorb", "blog", stringFromFile(tokenPath))
+	postGithubRepositoryDispatch("mattorb", "blog", token)
 }
 
 func main() {
+	usr, _ := user.Current()
+	dir := usr.HomeDir
+	tokenPath := filepath.Join(dir, ".ghtoken")
+	var err error
+	token, err = stringFromFile(tokenPath)
+
+	if err != nil {
+		token, err = stringFromConsole()
+	}
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/generate_repository_dispatch", generateRepositoryDispatch)

@@ -1,5 +1,6 @@
-Listens for an HTTP POST, and triggers a repository dispatch event via the Github API
+Listens for a HTTP POST, and triggers a repository dispatch event via the Github API
 
-access token is read out of $HOME/.ghtoken
+Github PAT:
+If  $HOME/.ghtoken exists, access token is read from that file, otherwise prompt on startup for access token from stdin. 
 
-This is a a quick and dirty way to glue a generic ghost webhook post to generating a Github repository dispatch event.
+Genesis: This is a a quick and dirty way to glue a generic ghost webhook post to generating a Github repository dispatch event.
